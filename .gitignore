@@ -11,6 +11,7 @@ package-lock.json
 #web
 
 web_client/node_modules/
+web_client/build/
 web_client/.vscode/settings.json
 
 node_modules
