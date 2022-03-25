@@ -12,27 +12,32 @@ import {connect} from 'react-redux';
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Home from './components/Home';
+import {LandingPage} from './screens/LandingPage';
+import {Home} from './screens/Home';
 
 toast.configure()
 
-function App(props) {
+/**
+ * Initial App
+ * @param {*} props 
+ * @returns 
+ */
+function App(props: any) {
   
   return (
     <Router>
       <Switch>
-      <Route exact path = "/" render={(props)=>{
-        return <Home {...props}/>
-        }
-      }/>
+        <Route exact path = "/" render={LandingPage}/>
+        <Route exact path = "/home" render={Home}/>
       </Switch>
     </Router>
   );
 }
-const mapStateToProps = state => ({
+
+const mapStateToProps = (state: any) => ({
 });
 
-const mapDispatchToProps = (dispatch) =>{
+const mapDispatchToProps = (dispatch: any) =>{
   return {
     
   }

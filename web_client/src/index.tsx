@@ -4,7 +4,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ChakraProvider } from "@chakra-ui/react";
 import {Provider} from 'react-redux';
-import {store,persistor} from './store.js';
+import {store,persistor} from './store';
 import {PersistGate} from 'redux-persist/es/integration/react';
 //console.log('ChakraProvider', ChakraProvider);
 import Fonts from './fonts';

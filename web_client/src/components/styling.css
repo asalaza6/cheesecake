@@ -1,0 +1,33 @@
+
+.Layout {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: lightblue;
+}
+
+.Header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    height: 100px;
+    background-color: rosybrown;
+    width: 100%;
+}
+
+.MenuItem {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: '20px';
+}
+
+.MenuItem:hover {
+}
