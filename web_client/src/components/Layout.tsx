@@ -1,6 +1,4 @@
 import React from 'react';
-import { Flex, Heading, Image, Button } from "@chakra-ui/react";
-import { FaInstagram } from 'react-icons/fa';
 import { Header } from './Header';
 import './styling.css';
 

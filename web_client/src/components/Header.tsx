@@ -1,7 +1,5 @@
 import React from 'react';
-import { Flex, Heading, Image, Button } from "@chakra-ui/react";
-import { FaInstagram } from 'react-icons/fa';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 interface MenuItemProp {
     name: string;

@@ -1,8 +1,5 @@
 import React from 'react';
-import { Flex, Heading, Image, Button } from "@chakra-ui/react";
-import { FaInstagram } from 'react-icons/fa';
-
-import { Link } from 'react-router-dom';
+import { Heading } from "@chakra-ui/react";
 import { LandingButton, Layout } from '../components';
 
 export const LandingPage: React.FC<any> = (props: any)=>{
