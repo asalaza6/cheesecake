@@ -5,7 +5,8 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: lightblue;
+    background-color: ;
+    align-items: center;
 }
 
 .Header {
@@ -13,9 +14,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    height: 100px;
-    background-color: rosybrown;
+    height: 85px;
     width: 100%;
 }
 
@@ -30,4 +29,5 @@
 }
 
 .MenuItem:hover {
+    background-color: rgb(220, 220, 220);
 }
