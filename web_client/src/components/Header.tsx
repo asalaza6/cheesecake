@@ -16,7 +16,7 @@ const MenuItems: MenuItemProp[] = [
     },
     {
         name: 'Dev',
-        route: '/home',
+        route: '/dev',
         flex: 1,
     },
     {

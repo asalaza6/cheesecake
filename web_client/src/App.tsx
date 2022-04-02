@@ -28,7 +28,7 @@ function App(props: any) {
     <Router>
       <Switch>
         <Route exact path = "/" render={LandingPage}/>
-        <Route exact path = "/home" render={Home}/>
+        <Route exact path = "/dev" render={Home}/>
       </Switch>
     </Router>
   );
