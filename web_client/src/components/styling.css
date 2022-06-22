@@ -30,3 +30,14 @@
 .MenuItem:hover {
     background-color: rgb(220, 220, 220);
 }
+
+html,
+body {
+  background: #130f40;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+}
