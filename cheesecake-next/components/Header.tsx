@@ -173,7 +173,7 @@ export const Header: React.FC<any> = (props: any) => {
                         <MenuItem onClick={() => { onClickFunction('/dev1'); }}>
                             Dev 1
                         </MenuItem>
-                        <MenuItem onClick={() => { onClickFunction('/dev2'); }}>
+                        {/* <MenuItem onClick={() => { onClickFunction('/dev2'); }}>
                             Dev 2
                         </MenuItem>
                         <MenuItem onClick={() => { onClickFunction('/dev3'); }}>
@@ -181,7 +181,7 @@ export const Header: React.FC<any> = (props: any) => {
                         </MenuItem>
                         <MenuItem onClick={() => { onClickFunction('/dev4'); }}>
                             Dev 4
-                        </MenuItem>
+                        </MenuItem> */}
                     </MenuList>
                 </Menu>
                 <Divider width='10px'/>
@@ -189,7 +189,7 @@ export const Header: React.FC<any> = (props: any) => {
                     colorScheme='pink'
                     aria-label='home'
                     icon={<AiOutlineShoppingCart />}
-                    onClick={()=>{onClickFunction('/Buy')}}
+                    onClick={()=>{onClickFunction('/buy')}}
                 />
             </Flex>
         </Flex>

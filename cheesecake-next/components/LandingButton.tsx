@@ -12,7 +12,7 @@ export const LandingButton: React.FC<any> = (props: any) => {
     };
     
     return (
-        <Flex direction="column" maxWidth='400px' borderRadius="25px" overflow="hidden" dir="center" justify="center">
+        <Flex direction="column" maxWidth='80%' borderRadius="25px" overflow="hidden" dir="center" justify="center">
             <Flex direction="row">
                 <Flex flex={1}>
                     <Image src='/static/general1.jpg' alt='Cheesecake Connect Instagram' />
@@ -27,7 +27,7 @@ export const LandingButton: React.FC<any> = (props: any) => {
                     <Image src='/static/general4.jpg' alt='Cheesecake Connect Instagram' />
                 </Flex>
             </Flex>
-            <Button height="60px" onClick={openInstagram} variant='solid' colorScheme='blackAlpha' ><FaInstagram size="2.2em" /> </Button>
+            <Button height="60px" onClick={openInstagram} variant='solid' colorScheme='pink' ><FaInstagram size="2.2em" /> </Button>
         </Flex>
     );
 }

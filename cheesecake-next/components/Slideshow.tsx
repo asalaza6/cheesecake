@@ -37,38 +37,39 @@ const images: ImageInfo[] = [
     {
         imageSrc: '/static/general1.jpg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 1',
+        desc: 'Strawberry',
     },
     {
         imageSrc: '/static/general2.jpg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 2',
+        desc: 'Oreo',
     },
     {
         imageSrc: '/static/general3.jpg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 3',
+        desc: 'Peanut Butter & Oreo Triple',
     },
     {
         imageSrc: '/static/general4.jpg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 4',
+        desc: 'Chocolate Strawberry Peanut Butter Triple',
     },
     {
-        imageSrc: '/static/general5.png',
+        imageSrc: '/static/general5.jpeg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 5',
+        desc: 'Lemon',
     },
     {
-        imageSrc: '/static/general6.png',
+        imageSrc: '/static/general6.jpeg',
         alt: 'Cheesecake Connect',
-        desc: 'delicous cheesecake 6',
+        desc: 'Strawberry Single',
     },
 ];
 type SlideshowImageProps = ImageInfo & {
     onImageHover: (desc: string | null) => void;
 }
 
+const slideshowAmount = 4;
 const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageProps)) => {
     const [isHover, setIsHover] = useState<boolean>(false);
     const {
@@ -88,7 +89,7 @@ const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageP
             setIsHover(false);
         },
         style: {
-            width: '20%'
+            width: `${Math.floor(100/slideshowAmount)}%`
         }
         // key: pathname,
     };
@@ -104,7 +105,6 @@ const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageP
         </motion.div>
     );
 };
-const slideshowAmount = 3;
 export const Slideshow: React.FC<any> = (props: any) => {
     const [description, setDescription] = useState<string | null>(null);
     const [pos, setPos] = useState<number>(0);
@@ -127,10 +127,10 @@ export const Slideshow: React.FC<any> = (props: any) => {
     const updateMargin = useCallback((value: number) => {
         setMargin((old)=> {
             if (value + old > 0) {
-                const newMargin = old-document.getElementById('carousel').offsetWidth;
+                const newMargin = old - (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount);
                 return newMargin;
-            } else if (value + old < -document.getElementById('carousel').offsetWidth) {
-                const newMargin = old+document.getElementById('carousel').offsetWidth;
+            } else if (value + old < - (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount)) {
+                const newMargin = old + (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount);
                 return newMargin;
             }
             return old;
@@ -193,8 +193,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         id: 'carousel',
         style: {
             x,
-            border: '24px black solid', 
-            margin: '0px 0px 50px 0px' 
+            margin: '50px 0px 50px 0px' 
         },
         drag: drag === 'dragging' ? 'x' : drag,
         onDragStart: ()=>{ setDrag('dragging'); },
@@ -208,12 +207,12 @@ export const Slideshow: React.FC<any> = (props: any) => {
     };
 
     const insideDivStyle: CSSProperties = {
-        width: `${100*images.length/slideshowAmount}%`,
+        width: `${2*100*images.length/slideshowAmount}%`,
         transform: `translate(${margin}px, 0px)`,
     }
 
     return (
-        <Flex marginTop= '20vh' maxWidth='40%' direction="column" dir="center" justify="center">
+        <Flex maxWidth='100%' direction="column" dir="center" justify="center">
             <motion.div {...motionDivProps}>
                 <Flex direction="row" style={insideDivStyle}>
                     <AnimatePresence>
@@ -230,7 +229,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
                 <Flex>Width: {width}</Flex>
                 <Flex>Margin: {margin}</Flex>
             </Flex> */}
-            <Flex dir='row'>
+            <Flex dir='row' justify='center' minH='50px' style={{ fontSize: '25pt', fontWeight: 'bold' }}>
                 {description}
             </Flex>
             {/* <Button onClick={nextSlide}>next</Button> */}

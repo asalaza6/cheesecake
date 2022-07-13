@@ -1,4 +1,7 @@
+import { Flex, IconButton } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
 
 //redux
 import {connect} from 'react-redux';
@@ -11,9 +14,33 @@ export const getServerSideProps = wrapper.getServerSideProps(store => ({req, res
 });
 
 const App: React.FC<any> = (props: any) => {
+  const router = useRouter();
+
+  const goToBuy = () => {
+    router.push('/buy');
+  }
+
   return (
     <>
       <Slideshow />
+      <Flex dir='row' justify='center' minH='50px'>
+        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
+          Buy Now
+        </Flex>
+        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
+        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
+          Buy Now
+        </Flex>
+        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
+        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
+          Buy Now
+        </Flex>
+        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
+        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
+          Buy Now
+        </Flex>
+        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
+      </Flex>
       <LandingButton />
     </>
   );
