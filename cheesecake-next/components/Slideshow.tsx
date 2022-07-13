@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect, useMemo, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import { Flex, Image, Button } from "@chakra-ui/react";
 import { FaInstagram } from 'react-icons/fa';
 import { AnimatePresence, motion, useMotionValue, useVelocity } from 'framer-motion';
@@ -113,28 +113,32 @@ export const Slideshow: React.FC<any> = (props: any) => {
     const velocity = useVelocity(x);
     const [paused, setPaused] = useState<boolean>(false);
     const [drag, setDrag] = useState<'x' | false | 'dragging'>('x'); // 3 states (initial) (during drag) (no drag for reset)
+    const [margin, setMargin] = useState(0);
     // pos ranges from 0 to images.length - 1
-    const nextSlide = () => {
-        setPos((currentPos) => {
-            if (currentPos + slideshowAmount < images.length) {
-                console.log('updating to', currentPos + slideshowAmount);
-                return currentPos + slideshowAmount;
-            } else {
-                console.log('updating to', currentPos + slideshowAmount - images.length);
-                return currentPos + slideshowAmount - images.length;
-            }
-        });
-    };
-
-    useEffect(() => {
-        if (x.get() > 0) {
-            x.set(x.get()-width);
-        }
-    }, [pos]);
 
     useEffect(() => {
         x.set(-width);
     }, [width]);
+
+    useEffect(()=> {
+        console.log(margin);
+    }, [margin]);
+
+    const updateMargin = useCallback((value: number) => {
+        setMargin((old)=> {
+            if (value + old > 0) {
+                const newMargin = old-document.getElementById('carousel').offsetWidth;
+                return newMargin;
+            } else if (value + old < -document.getElementById('carousel').offsetWidth) {
+                const newMargin = old+document.getElementById('carousel').offsetWidth;
+                return newMargin;
+            }
+            return old;
+        });
+        // if (value - margin > 0) {
+        // }
+        // console.log(value, margin, value-margin, document.getElementById('carousel').offsetWidth);
+    }, [margin]);
 
     useEffect(() => {
         if (paused || drag === 'dragging') return;
@@ -142,13 +146,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         if (!width) {
             setWidth(document.getElementById('carousel').offsetWidth);
         }
-        x.onChange((value) => {
-            if (value > 0) {
-                // x.set(value-width);
-                // reset order
-                nextSlide();
-            }
-        });
+        x.onChange(updateMargin);
         const timer = setInterval(() => {
             x.stop();
             x.set(x.getPrevious()+2);
@@ -158,20 +156,13 @@ export const Slideshow: React.FC<any> = (props: any) => {
             console.log('timeout ended');
             clearInterval(timer);
         }
-    }, [paused, drag, width]);
+    }, [paused, drag, width, margin]);
     
     const slideshowImages = useMemo(() => {
         // pos determines the first element only
         const format = pos ? images.slice(pos, images.length).concat(images.slice(0, pos)) : images;
         console.log(format);
-        return format;
-        // if (pos + slideshowAmount > images.length) {
-        //     console.log(pos, images.length, '->', 0, images.length-pos);
-        //     return images.slice(pos, images.length).concat(images.slice(0, (slideshowAmount - (images.length - pos))));
-        // } else {
-        //     console.log(pos, pos + slideshowAmount);
-        //     return images.slice(pos, pos + slideshowAmount);
-        // }
+        return [...format, ...format];
     }, [pos]);
 
     const onImageHover = (desc: string | null) => {
@@ -202,7 +193,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         id: 'carousel',
         style: {
             x,
-            border: '1px black solid', 
+            border: '24px black solid', 
             margin: '0px 0px 50px 0px' 
         },
         drag: drag === 'dragging' ? 'x' : drag,
@@ -216,10 +207,15 @@ export const Slideshow: React.FC<any> = (props: any) => {
         },
     };
 
+    const insideDivStyle: CSSProperties = {
+        width: `${100*images.length/slideshowAmount}%`,
+        transform: `translate(${margin}px, 0px)`,
+    }
+
     return (
         <Flex marginTop= '20vh' maxWidth='40%' direction="column" dir="center" justify="center">
             <motion.div {...motionDivProps}>
-                <Flex direction="row" style={{width: `${100*images.length/slideshowAmount}%`}}>
+                <Flex direction="row" style={insideDivStyle}>
                     <AnimatePresence>
                     {
                         slideshowImages.map((item => 
@@ -229,10 +225,15 @@ export const Slideshow: React.FC<any> = (props: any) => {
                     </AnimatePresence>
                 </Flex>
             </motion.div>
+            {/* <Flex>
+                <Flex>X: {x.get()}</Flex>
+                <Flex>Width: {width}</Flex>
+                <Flex>Margin: {margin}</Flex>
+            </Flex> */}
             <Flex dir='row'>
                 {description}
             </Flex>
-            <Button onClick={nextSlide}>next</Button>
+            {/* <Button onClick={nextSlide}>next</Button> */}
         </Flex>
     );
 }
