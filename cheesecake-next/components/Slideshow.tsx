@@ -127,7 +127,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
 
     useEffect(() => {
         x.set(-width);
-    }, [width]);
+    }, [width, x]);
 
     useEffect(()=> {
         console.log(margin);
@@ -147,7 +147,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         // if (value - margin > 0) {
         // }
         // console.log(value, margin, value-margin, document.getElementById('carousel').offsetWidth);
-    }, [margin]);
+    }, []);
 
     useEffect(() => {
         if (paused || drag === 'dragging') return;
@@ -165,7 +165,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
             console.log('timeout ended');
             clearInterval(timer);
         }
-    }, [paused, drag, width, margin]);
+    }, [paused, drag, width, margin, updateMargin, x]);
     
     const slideshowImages = useMemo(() => {
         // pos determines the first element only
@@ -226,8 +226,8 @@ export const Slideshow: React.FC<any> = (props: any) => {
                 <Flex direction="row" style={insideDivStyle}>
                     <AnimatePresence>
                     {
-                        slideshowImages.map((item => 
-                            <SlideshowImage {...item} onImageHover={onImageHover} />
+                        slideshowImages.map(((item, index) => 
+                            <SlideshowImage key={`item.imageSrc${index}`} {...item} onImageHover={onImageHover} />
                         ))
                     }
                     </AnimatePresence>
