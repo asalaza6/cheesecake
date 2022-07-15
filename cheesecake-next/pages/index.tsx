@@ -28,18 +28,6 @@ const App: React.FC<any> = (props: any) => {
           Buy Now
         </Flex>
         <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
-        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
-          Buy Now
-        </Flex>
-        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
-        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
-          Buy Now
-        </Flex>
-        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
-        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
-          Buy Now
-        </Flex>
-        <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />
       </Flex>
       <LandingButton />
     </>

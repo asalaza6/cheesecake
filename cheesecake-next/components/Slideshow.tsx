@@ -88,6 +88,15 @@ const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageP
             onImageHover(null);
             setIsHover(false);
         },
+        onClick: () => {
+            onImageHover(props.desc);
+            setIsHover(true);
+            // hover for 3 seconds
+            setTimeout(() => {
+                onImageHover(null);
+                setIsHover(false);
+            }, 1500);
+        },
         style: {
             width: `${Math.floor(100/slideshowAmount)}%`
         }
@@ -186,7 +195,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
     const onDragEnd = () => {
         setTimeout(() => {
             setDrag(false);
-        }, 10);
+        }, 1500);
     }
 
     const motionDivProps = {
