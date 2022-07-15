@@ -24,7 +24,7 @@ const App: React.FC<any> = (props: any) => {
     <>
       <Slideshow />
       <Flex dir='row' justify='center' minH='50px'>
-        <Flex style={{ fontSize: '25pt', fontWeight: 'bold' }}>
+        <Flex style={{ fontSize: '25pt', fontWeight: 'bold', marginBottom: '50px' }}>
           Buy Now
         </Flex>
         <IconButton aria-label='Buy Now' onClick={goToBuy} size='lg' colorScheme='blue' marginRight={'25px'} marginLeft='25px' icon={<AiOutlineShoppingCart />} />

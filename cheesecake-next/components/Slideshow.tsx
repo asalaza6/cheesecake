@@ -188,7 +188,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         if (drag === false) {
             setTimeout(() => {
                 setDrag('x');
-            }, 3000);
+            }, 10);
         }
     }, [drag]);
 
