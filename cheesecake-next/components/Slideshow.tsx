@@ -241,6 +241,9 @@ export const Slideshow: React.FC<any> = (props: any) => {
             <Flex dir='row' justify='center' minH='50px' style={{ fontSize: '25pt', fontWeight: 'bold' }}>
                 {description}
             </Flex>
+            <div>
+                DRAG: {drag}
+            </div>
             {/* <Button onClick={nextSlide}>next</Button> */}
         </Flex>
     );
