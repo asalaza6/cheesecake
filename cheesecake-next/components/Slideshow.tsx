@@ -125,9 +125,9 @@ export const Slideshow: React.FC<any> = (props: any) => {
     const timeoutID = useRef<NodeJS.Timeout | undefined>();
     // pos ranges from 0 to images.length - 1
 
-    useEffect(() => {
-        x.set(-width);
-    }, [width, x]);
+    // useEffect(() => {
+    //     x.set(-width);
+    // }, [width, x]);
 
     useEffect(()=> {
         console.log(margin);
@@ -247,10 +247,11 @@ export const Slideshow: React.FC<any> = (props: any) => {
         onDragStart: () => { setDrag('dragging'); },
         onDragEnd,
         onDrag: () => {
-            const width = document.getElementById('carousel').offsetWidth;
-            if (x.get() > width) {
-                x.set(x.get()-width);
-            }
+            // const width = document.getElementById('carousel').offsetWidth;
+            updateMargin(x.get());
+            // if (x.get() > width) {
+            //     x.set(x.get()-width);
+            // }
         },
     };
 
