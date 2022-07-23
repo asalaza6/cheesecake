@@ -123,7 +123,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
     // const [width, setWidth] = useState(0);
     const [size, width] = useScreenSize();
     const slideshowAmount = size === 's' ? 2 : size === 'm' ? 3 : 4;
-    const slideshowSpeed = size === 's' ? 1.5 : size === 'm' ? 2 : ;
+    const slideshowSpeed = size === 's' ? 1.5 : size === 'm' ? 2 : 2.5;
     const x = useMotionValue(-width);
     // const velocity = useVelocity(x);
     const [drag, setDrag] = useState<'x' | false | 'dragging' | 'endDrag' | 'paused'>('x'); // 3 states (initial) (during drag) (no drag for reset)
