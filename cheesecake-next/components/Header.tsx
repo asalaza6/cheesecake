@@ -6,6 +6,7 @@ import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { Heading, Text } from 'chakra-ui';
+import { useScreenSize } from '../util';
 
 // interface DropdownProps {
 //     name: string;
@@ -129,6 +130,10 @@ import { Heading, Text } from 'chakra-ui';
 export const Header: React.FC<any> = (props: any) => {
     const router = useRouter();
 
+    const [size, width] = useScreenSize();
+
+    const headerClass = size === 's' ? 'HeaderTitleSmall' : size === 'm' ? 'HeaderTitleMedium': 'HeaderTitleLarge';
+
     const onClickFunction = (clickRoute: string) => {
         if (clickRoute) router.push(clickRoute);
     }
@@ -140,7 +145,6 @@ export const Header: React.FC<any> = (props: any) => {
             padding='10px 20px 10px 20px'
         >
             <Flex
-                width={'20%'}
                 justify='flex-start'
             >
                 <IconButton 
@@ -153,10 +157,10 @@ export const Header: React.FC<any> = (props: any) => {
             <Flex
                 flexGrow={1}
                 justify='center'
+                verticalAlign='center'
+                className={headerClass}
             >
-                <div className='HeaderTitle'>
                     THE CHEESECAKE CONNECT
-                </div>
             </Flex>
             <Flex 
                 width='20%'

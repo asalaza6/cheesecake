@@ -31,8 +31,18 @@
     align-items: center;
     height: 85px;
 }
-.HeaderTitle {
+.HeaderTitleLarge {
   font-size: xx-large;
+  font-weight: bold;
+  color: black
+}
+.HeaderTitleMedium {
+  font-size: x-large;
+  font-weight: bold;
+  color: black
+}
+.HeaderTitleSmall {
+  font-size: smaller;
   font-weight: bold;
   color: black
 }
