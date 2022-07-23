@@ -158,12 +158,12 @@ export const Header: React.FC<any> = (props: any) => {
                 flexGrow={1}
                 justify='center'
                 verticalAlign='center'
-                className={headerClass}
             >
+                <div className={headerClass}>
                     THE CHEESECAKE CONNECT
+                </div>
             </Flex>
             <Flex 
-                width='20%'
                 justify={'flex-end'}
             >
             <Menu>

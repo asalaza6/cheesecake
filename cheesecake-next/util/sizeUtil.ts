@@ -17,7 +17,7 @@ export const useScreenSize = (): ["l" | "m" | "s", number] => {
       
     let s: 'l' | 'm' | 's' = 'l';
     if (width) {
-        if (width < 767) {
+        if (width < 600) {
             s = 's';
         } else if (width < 1200) {
             s = 'm';

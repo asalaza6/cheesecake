@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
+import { useScreenSize } from '../util';
 import { Header } from './Header';
 const pageVariants = {
     initial: {
@@ -21,17 +22,8 @@ export const Layout: React.FC<any> = (props: any) => {
     const {
         children
     } = props;
-
-    // const pathname = window.location.pathname;
-
-    const divProps = {
-        className: 'Layout',
-        initial: 'initial',
-        animate: 'in',
-        exit: 'out',
-        variants: pageVariants,
-        // key: pathname,
-    };
+    const [size] = useScreenSize();
+    const footerClass = size === 's' ? 'FooterSmall' : size === 'm' ? 'FooterMedium' : 'FooterLarge';
     
     return (
         <div className='Layout'>
@@ -39,7 +31,7 @@ export const Layout: React.FC<any> = (props: any) => {
             <div className='Children'>
                 {children}
             </div>
-            <div className='Footer'>
+            <div className={footerClass}>
             {`Copyright © ${2022} TheCheeseCakeConnect.com All Rights Reserved`}
             </div>
         </div>

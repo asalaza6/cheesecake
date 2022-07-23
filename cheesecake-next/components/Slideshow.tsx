@@ -2,6 +2,7 @@ import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState
 import { Flex, Image, Button } from "@chakra-ui/react";
 import { FaInstagram } from 'react-icons/fa';
 import { AnimatePresence, motion, useMotionValue, useVelocity } from 'framer-motion';
+import { useScreenSize } from '../util';
 
 const pageVariants = {
     initial: {
@@ -67,13 +68,15 @@ const images: ImageInfo[] = [
 ];
 type SlideshowImageProps = ImageInfo & {
     onImageHover: (desc: string | null, clickBoolean?: boolean) => void;
+    slideshowAmount: number;
 }
 
-const slideshowAmount = 4;
+
 const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageProps)) => {
     const [isHover, setIsHover] = useState<boolean>(false);
     const {
-        onImageHover
+        onImageHover,
+        slideshowAmount,
     } = props;
     const divProps = {
         initial: 'initial',
@@ -116,10 +119,13 @@ const SlideshowImage: React.FC<(SlideshowImageProps)> = (props: (SlideshowImageP
 };
 export const Slideshow: React.FC<any> = (props: any) => {
     const [description, setDescription] = useState<string | null>(null);
-    const [pos, setPos] = useState<number>(0);
-    const [width, setWidth] = useState(0);
+    // const [pos, setPos] = useState<number>(0);
+    // const [width, setWidth] = useState(0);
+    const [size, width] = useScreenSize();
+    const slideshowAmount = size === 's' ? 2 : size === 'm' ? 3 : 4;
+    const slideshowSpeed = size === 's' ? 1.5 : size === 'm' ? 2 : ;
     const x = useMotionValue(-width);
-    const velocity = useVelocity(x);
+    // const velocity = useVelocity(x);
     const [drag, setDrag] = useState<'x' | false | 'dragging' | 'endDrag' | 'paused'>('x'); // 3 states (initial) (during drag) (no drag for reset)
     const [margin, setMargin] = useState(0);
     const timeoutID = useRef<NodeJS.Timeout | undefined>();
@@ -129,16 +135,18 @@ export const Slideshow: React.FC<any> = (props: any) => {
     //     x.set(-width);
     // }, [width, x]);
 
-    useEffect(()=> {
-        console.log(margin);
-    }, [margin]);
+    // useEffect(()=> {
+    //     // console.log(slideshowAmount, 'slide');
+    // }, [margin, slideshowAmount]);
 
     const updateMargin = useCallback((value: number) => {
         setMargin((old)=> {
             if (value + old > 0) {
+                // console.log(slideshowAmount);
                 const newMargin = old - (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount);
                 return newMargin;
             } else if (value + old < - (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount)) {
+                // console.log(slideshowAmount);
                 const newMargin = old + (document.getElementById('carousel').offsetWidth) * (images.length/slideshowAmount);
                 return newMargin;
             }
@@ -147,32 +155,36 @@ export const Slideshow: React.FC<any> = (props: any) => {
         // if (value - margin > 0) {
         // }
         // console.log(value, margin, value-margin, document.getElementById('carousel').offsetWidth);
-    }, []);
+    }, [slideshowAmount]);
 
     useEffect(() => {
-        if (drag === 'dragging' || drag === 'endDrag' || drag === 'paused') return;
-        console.log('timeout start');
-        if (!width) {
-            setWidth(document.getElementById('carousel').offsetWidth);
+        if (drag === 'dragging' || drag === 'paused') return;
+        // console.log('timeout start', slideshowAmount);
+        // if (!width) {
+        //     setWidth(document.getElementById('carousel').offsetWidth);
+        // }
+        const unsubscribe = x.onChange(updateMargin);
+        let timer;
+        if (drag !== 'endDrag') {
+            timer = setInterval(() => {
+                x.stop();
+                x.set(x.getPrevious()+slideshowSpeed);
+                // console.log('timeout called', slideshowPos);
+            }, 10);
         }
-        x.onChange(updateMargin);
-        const timer = setInterval(() => {
-            x.stop();
-            x.set(x.getPrevious()+2);
-            // console.log('timeout called', slideshowPos);
-        }, 10);
         return () => {
-            console.log('timeout ended');
-            clearInterval(timer);
+            // console.log('timeout ended');
+            if (timer) clearInterval(timer);
+            unsubscribe();
         }
-    }, [drag, width, margin, updateMargin, x]);
+    }, [drag, width, margin, updateMargin, x, slideshowAmount]);
     
     const slideshowImages = useMemo(() => {
         // pos determines the first element only
-        const format = pos ? images.slice(pos, images.length).concat(images.slice(0, pos)) : images;
-        console.log(format);
-        return [...format, ...format];
-    }, [pos]);
+        // const format = pos ? images.slice(pos, images.length).concat(images.slice(0, pos)) : images;
+        // console.log(format);
+        return [...images, ...images];
+    }, []);
 
     const onImageHover = (desc: string | null, click = false) => {
         setDescription(desc);
@@ -202,7 +214,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
             } else {
                 setDrag((prevDrag) => {
                     if (prevDrag === 'paused') {
-                        console.log('setting false from onImageHover')
+                        // console.log('setting false from onImageHover')
                         return false;
                     }
                     return prevDrag;
@@ -212,7 +224,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
     }
 
     useEffect(() => {
-        console.log(`drag = ${drag}`)
+        // console.log(`drag = ${drag}`)
         if (drag === false) {
             setTimeout(() => {
                 setDrag('x');
@@ -229,7 +241,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         timeoutID.current = setTimeout(() => {
             setDrag((prevDrag) => {
                 if (prevDrag === 'endDrag') {
-                    console.log('settings false from dragEnd');
+                    // console.log('settings false from dragEnd');
                     return false;
                 }
                 return prevDrag;
@@ -248,6 +260,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         onDragEnd,
         onDrag: () => {
             // const width = document.getElementById('carousel').offsetWidth;
+            // console.log('drag', x.get());
             updateMargin(x.get());
             // if (x.get() > width) {
             //     x.set(x.get()-width);
@@ -259,6 +272,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
         width: `${2*100*images.length/slideshowAmount}%`,
         transform: `translate(${margin}px, 0px)`,
     }
+    
 
     return (
         <Flex maxWidth='100%' direction="column" dir="center" justify="center">
@@ -267,7 +281,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
                     <AnimatePresence>
                     {
                         slideshowImages.map(((item, index) => 
-                            <SlideshowImage key={`item.imageSrc${index}`} {...item} onImageHover={onImageHover} />
+                            <SlideshowImage key={`item.imageSrc${index}`} {...item} onImageHover={onImageHover} slideshowAmount={slideshowAmount} />
                         ))
                     }
                     </AnimatePresence>
