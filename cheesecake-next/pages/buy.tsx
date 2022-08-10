@@ -1,21 +1,50 @@
-import { Heading } from '@chakra-ui/react';
-import React from 'react';
+import { Button, Flex, Heading } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 //redux
 import {connect} from 'react-redux';
 import {LOGOUT, AUTHORIZE} from '../actions/userAction';
+import { Checkout } from '../components';
+import Catalog from '../components/Catalog';
 import { wrapper } from '../store';
+import { LineItem, isArray } from '../util';
 
 export const getServerSideProps = wrapper.getServerSideProps(store => ({req, res, ...etc}): any => {
   return {};
 });
 
 const App: React.FC<any> = (props: any) => {
+  const [products, setProducts] = useState<LineItem[]>([]);
+
+  const checkout = async () => {
+    const checkoutProducts = products.filter(item => item.quantity).map(item => ({ price: item.price, quantity: item.quantity }));
+    if (!isArray(checkoutProducts)) {
+      alert('Cart is empty!');
+      return;
+    }
+    const response = await fetch(`/api/checkout`,{
+        method: "POST",
+        body: JSON.stringify({
+          line_items: checkoutProducts,
+        })
+    });
+    const parseRes = await response.json();
+    window.location = parseRes;
+  }
   return (
     <>
         <Heading>
             Buy (Coming Soon)
         </Heading>
+        <Flex dir='row'>
+          <Flex dir='column' flex={2}>
+            <Catalog checkout={products} setCheckout={setProducts} />
+          </Flex>
+          <Flex dir='column' flex={1}>
+            <Checkout checkout={products} />
+          </Flex>
+        </Flex>
+        <Button onClick={checkout}>Checkout</Button>
     </>
   );
 }

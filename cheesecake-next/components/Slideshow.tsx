@@ -2,31 +2,7 @@ import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState
 import { Flex, Image, Button } from "@chakra-ui/react";
 import { FaInstagram } from 'react-icons/fa';
 import { AnimatePresence, motion, useMotionValue, useVelocity } from 'framer-motion';
-import { useScreenSize } from '../util';
-
-const pageVariants = {
-    initial: {
-        opacity: 0,
-        x: 300,
-    },
-    in: {
-        opacity: 1,
-        x: 0,
-    },
-    out: {
-        opacity: 0,
-        x: -300,
-    },
-    hover: {
-        scale: 1.2,
-        x: 0,
-        opacity: 1,
-    },
-    rest: {
-        opacity: 1,
-        x: 0,
-    },
-}
+import { useScreenSize, pageVariants } from '../util';
 
 interface ImageInfo {
     imageSrc: string;
