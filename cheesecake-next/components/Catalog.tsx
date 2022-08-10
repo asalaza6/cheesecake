@@ -84,7 +84,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                 placeholder='Select a Product'
                 onChange={onProductSelect}
             >
-                {products.map((item) => <option value={item.id}>{item.name}</option>)}
+                {products.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </Select>
             {currentProduct && 
             <Flex direction='column'>
