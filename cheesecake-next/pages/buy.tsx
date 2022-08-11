@@ -1,5 +1,5 @@
-import { Button, Flex, Heading } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { AlertDialog, Button, Flex, Heading } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 
 //redux
 import {connect} from 'react-redux';
@@ -37,14 +37,60 @@ const App: React.FC<any> = (props: any) => {
     const parseRes = await response.json();
     window.location = parseRes;
   }
+
+  const sendEmail = async (email?: string) => {
+    const response = await fetch(`/api/email`,{
+        method: "POST",
+        body: JSON.stringify({
+          products,
+          email
+        })
+    });
+    const parseRes = await response.json();
+  }
+  const setCheckout = (items: LineItem[]) => {
+    setProducts(items || []);
+    if (!isArray(items)) {
+      localStorage.removeItem('checkout');
+    } else {
+      localStorage.setItem('checkout', JSON.stringify(items));
+    }
+  }
+
+  useEffect(() => {
+    if (!isArray(products)) {
+      let checkoutCache: any = localStorage.getItem('checkout');
+      try {
+        checkoutCache = JSON.parse(checkoutCache);
+      } catch {
+        checkoutCache = null;
+      }
+
+      if (checkoutCache) {
+        setProducts(checkoutCache);
+      }
+    } else {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const success = urlParams.get('success');
+      const email = urlParams.get('email');
+      if (success) {
+        sendEmail(email);
+        alert('Transaction Successful!');
+        setCheckout(undefined);
+        window.history.replaceState(null, null, window.location.pathname);
+      }
+    }
+  }, [products, setCheckout, sendEmail]);
+  
   return (
     <>
         <Heading>
-            Buy (Coming Soon)
+            Buy
         </Heading>
         <Flex direction='column' width='80%'>
           <Flex dir='row'>
-            <Catalog checkout={products} setCheckout={setProducts} />
+            <Catalog checkout={products} setCheckout={setCheckout} />
           </Flex>
           <Flex dir='row'>
             <Checkout checkout={products} />
