@@ -128,6 +128,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
             });
             setProductTypeList(selectedProducts);
             setSpecialProducts(type === 'trio' ? (new Array(3)).fill(null) : type === 'variety' ? (new Array(5)).fill(null) : undefined);
+            setCurrentProduct(undefined);
         }
     }
 
