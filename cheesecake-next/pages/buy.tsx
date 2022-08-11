@@ -26,7 +26,7 @@ const App: React.FC<any> = (props: any) => {
         method: "POST",
         body: JSON.stringify({
           line_items: checkoutProducts,
-          metadata: { checkout: products },
+          metadata: { 'checkout': JSON.stringify(products) },
         })
     });
     const parseRes = await response.json();
