@@ -39,7 +39,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
             <br/>
             {checkout.map((item) => {
                 return (
-                    <Flex dir='row' borderBottom='black'>
+                    <Flex key={item.name} dir='row' borderBottom='black'>
                         <Flex dir='column' flex={4}>
                             {item.name}
                         </Flex>

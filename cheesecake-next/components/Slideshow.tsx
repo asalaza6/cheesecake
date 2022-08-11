@@ -153,7 +153,7 @@ export const Slideshow: React.FC<any> = (props: any) => {
             if (timer) clearInterval(timer);
             unsubscribe();
         }
-    }, [drag, width, margin, updateMargin, x, slideshowAmount]);
+    }, [drag, width, margin, updateMargin, x, slideshowAmount, slideshowSpeed]);
     
     const slideshowImages = useMemo(() => {
         // pos determines the first element only
