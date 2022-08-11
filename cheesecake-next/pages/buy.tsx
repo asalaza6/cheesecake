@@ -42,7 +42,7 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy (Coming Soon)
         </Heading>
-        <Flex direction='column'>
+        <Flex direction='column' width='80%'>
           <Flex dir='row'>
             <Catalog checkout={products} setCheckout={setProducts} />
           </Flex>
@@ -50,7 +50,8 @@ const App: React.FC<any> = (props: any) => {
             <Checkout checkout={products} />
           </Flex>
         </Flex>
-        <Button onClick={checkout}>Checkout</Button>
+        
+        <Button onClick={checkout} size='lg' colorScheme='pink'>Checkout</Button>
     </>
   );
 }

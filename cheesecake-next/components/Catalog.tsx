@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Flex, Select, Image, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Button, ComponentWithAs, ButtonProps } from "@chakra-ui/react";
-import { isArray, LineItem } from '../util';
+import { Flex, Select, Image, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Button, ComponentWithAs, ButtonProps, Text } from "@chakra-ui/react";
+import { isArray, LineItem, ProductType, ProductTypeType } from '../util';
 
 interface CatalogProps {
     checkout: LineItem[];
@@ -26,15 +26,11 @@ interface ProductInfo {
     qty: number,
 }
 
-const ProductType = {
-    'small': 'small',
-    'trio': 'small',
-    'teninch': 'teninch',
-    'variety': 'small',
-    'teninchdouble': 'teninch',
+const specialProductType: Partial<Record<ProductTypeType, number>> = {
+    'trio': 3,
+    'teninchdouble': 2,
+    'variety': 5,
 }
-
-type ProductTypeType = keyof typeof ProductType;
 
 export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
     const {
@@ -59,11 +55,25 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         }
     }
 
+    const changeProductType = (type: ProductTypeType) => {
+        if (type !== productType) {
+            setProductType(type);
+            const selectedProducts = products.filter((p: ProductInfo) => {
+                return p.metadata?.type === ProductType[type];
+            });
+            setProductTypeList(selectedProducts);
+            setSpecialProducts(specialProductType[type] ? (new Array(specialProductType[type])).fill(null) : undefined);
+            setCurrentProduct(undefined);
+        }
+    }
+
     useEffect(() => {
         if (!isArray(products)) {
             loadProductList();
+        } else if (!productType) {
+            changeProductType('small');
         }
-    }, [products]);
+    }, [products, changeProductType, productType]);
 
     const onProductSelect = (evt) => {
         const productID = evt.target.value;
@@ -76,6 +86,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     name: prod.name,
                     quantity: 0,
                     priceAmount: prod.price,
+                    metadata: prod.metadata,
                 });
                 setCheckout([...checkout]);
                 idx = length - 1;
@@ -86,16 +97,20 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                 ...prod,
                 qty,
             })
+        } else {
+            setCurrentProduct(undefined);
         }
     }
 
     const onProductSelectSpecial = (evt, idx: number) => {
         const productID = evt.target.value;
         const prod = products.find((item) => item.id === productID);
-        if (prod) specialProducts[idx] = prod;
+        specialProducts[idx] = prod;
+        setSpecialProducts([...specialProducts]);
+        
         const filled = specialProducts.every((item) => item);
         if (filled) {
-            const flavors = specialProducts.map((item) => (item.name).slice(0, 5)).sort().join(' - ');
+            const flavors = specialProducts.map((item) => (item.name).slice(0, 5)).sort().join('-');
             const specialProd = products.find((item) => item.metadata?.type === productType);
             let idx = checkout.findIndex((item) => item.price === specialProd.default_price && item.metadata?.flavors === flavors);
             if (idx === -1) {
@@ -105,6 +120,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     quantity: 0,
                     priceAmount: specialProd.price,
                     metadata: {
+                        ...specialProd.metadata,
                         flavors,
                     },
                 });
@@ -120,18 +136,6 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         }
     }
 
-    const changeProductType = (type: ProductTypeType) => {
-        if (type !== productType) {
-            setProductType(type);
-            const selectedProducts = products.filter((p: ProductInfo) => {
-                return p.metadata?.type === ProductType[type];
-            });
-            setProductTypeList(selectedProducts);
-            setSpecialProducts(type === 'trio' ? (new Array(3)).fill(null) : type === 'variety' ? (new Array(5)).fill(null) : undefined);
-            setCurrentProduct(undefined);
-        }
-    }
-
     const onQtyChange = (valueAsString: string, valueAsNumber: number) => {
         checkout[checkoutIndex].quantity = valueAsNumber;
         setCheckout([...checkout]);
@@ -143,43 +147,44 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
             onClick: () => {
                 changeProductType(type);
             },
+            colorScheme: selected ? 'pink' : undefined,
             style: {
-                border: selected ? '1px black solid' : undefined,
+                colorScheme: selected ? 'pink' : undefined,
+                width: '100%',
             },
+            variant: 'ghost',
         };
         return props;
     };
     const SelectOptions = productTypeList.map((item) => <option key={item.id} value={item.id}>{item.name}</option>);
     return (
-        <Flex maxWidth='100%' direction="column" dir="center" justify="center">
-            <Flex wrap='wrap'>
-                <Flex dir='row'>
-                    <Flex dir='column'>
-                        <Button {...getTypeButtonProps('small')}>Single Small</Button>
-                    </Flex>
-                    <Flex dir='column'>
-                        <Button {...getTypeButtonProps('teninch')}>Ten Inch</Button>
-                    </Flex>
+        <Flex width='100%' direction="column" alignItems='center' dir="center" justify="center" padding='15px' borderRadius='20px'>
+            
+            <Flex dir='row' width='100%'>
+                <Flex dir='column' flex={1}>
+                    <Button {...getTypeButtonProps('small')}>Single Small</Button>
                 </Flex>
-                <Flex dir='row'>
-                    <Flex dir='column'>
-                        <Button {...getTypeButtonProps('teninchdouble')}>Ten Inch Half/Half</Button>
-                    </Flex>
-                    <Flex dir='column'>
-                        <Button {...getTypeButtonProps('trio')}>Trio</Button>
-                    </Flex>
-                    <Flex dir='column'>
-                        <Button {...getTypeButtonProps('variety')}>Variety</Button>
-                    </Flex>
+                <Flex dir='column' flex={1}>
+                    <Button {...getTypeButtonProps('teninch')}>Ten Inch</Button>
+                </Flex>
+                <Flex dir='column' flex={1}>
+                    <Button {...getTypeButtonProps('teninchdouble')}>Ten Inch Half/Half</Button>
+                </Flex>
+                <Flex dir='column' flex={1}>
+                    <Button {...getTypeButtonProps('trio')}>Trio</Button>
+                </Flex>
+                <Flex dir='column' flex={1}>
+                    <Button {...getTypeButtonProps('variety')}>Variety</Button>
                 </Flex>
             </Flex>
             {
-                productType === 'trio' || productType === 'variety' ? (
-                    <Flex dir='row'>
-                        {(new Array(productType === 'trio' ? 3 : 5)).fill(0).map((item, idx) => {
+                specialProductType[productType] ? (
+                    <Flex dir='row' width='100%' justify='center'>
+                        {(new Array(specialProductType[productType])).fill(0).map((item, idx) => {
                             return (
-                                <Flex key={`${productType}${idx}`} dir='column' flex={1}>
+                                <Flex key={`${productType}${idx}`} dir='column' flex={1} maxWidth='500px'>
                                     <Select 
+                                        width='100%'
                                         placeholder={`Cake ${idx + 1}`}
                                         onChange={(evt: any) => { onProductSelectSpecial(evt, idx); }}
                                     >
@@ -191,66 +196,72 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     </Flex>
                 ) :
                 <Select 
+                    maxWidth='500px'
+                    width='100%'
                     placeholder='Select a Product'
                     onChange={onProductSelect}
                 >
                     {SelectOptions}
                 </Select>
             }
-            {currentProduct && 
-            <Flex direction='column'>
-                <Flex dir='row'>{currentProduct.name}</Flex>
+            <Flex direction='column' width='100%' alignItems='center'>
                 {
-                    productType === 'trio' || productType === 'variety' ? (
-                        <Flex dir='row'>
+                    specialProductType[productType] ? (
+                        <Flex dir='row' width='100%' padding='10px' justify='center'>
                             {specialProducts.map((item, idx) => {
                                 return (
-                                    <Flex key={`item.name${idx}`} dir='column' flex={1}>
-                                        <div>
-                                            <Image 
-                                                alt={item.description} 
-                                                src={item.images.length ? item.images[0] : null} 
-                                            />
-                                        </div>
+                                    <Flex key={`item.name${idx}`} dir='column' flex={1} maxWidth='500px'>
+                                        <Image 
+                                            maxHeight='500px'
+                                            width='100%'
+                                            fallbackSrc='/static/fallback.jpeg'
+                                            alt={item?.description || 'choose a cheesecake'} 
+                                            src={item?.images.length ? item.images[0] : null} 
+                                        />
                                     </Flex>
                                 );
                             })}
                         </Flex>
                     ) :
                     <Image 
-                        alt={currentProduct.description} 
-                        src={currentProduct.images.length ? currentProduct.images[0] : null} 
+                        maxHeight='500px'
+                        maxWidth='500px'
+                        width='100%'
+                        padding='10px'
+                        fallbackSrc='/static/fallback.jpeg'
+                        alt={currentProduct?.description} 
+                        src={currentProduct?.images.length ? currentProduct.images[0] : null} 
                     />
                 }
-                <Flex dir='row'>{currentProduct.description}</Flex>
-                <Flex dir='row'>
-                    <Flex direction='column' flex={8}>
-                        <Flex dir='row'>{"Price: "}</Flex>
-                        <Flex dir='row'>{`${currentProduct.price}$`}</Flex>
-                    </Flex>
-                    <Flex direction='column' flex={8}>
-                        <Flex dir='row'>{"QTY: "}</Flex>
-                        <Flex dir='row'>
-                            <NumberInput
-                                onChange={onQtyChange}
-                                value={checkout[checkoutIndex].quantity}
-                                min={0}
-                            >
-                                <NumberInputField />
-                                <NumberInputStepper>
-                                    <NumberIncrementStepper />
-                                    <NumberDecrementStepper />
-                                </NumberInputStepper>
-                            </NumberInput>
+                {currentProduct && <>
+                    <Flex dir='row'><Text fontSize='lg' fontWeight='bold'>{currentProduct.description}</Text></Flex>
+                    <Flex dir='row' width='100%'>
+                        <Flex direction='column' flex={8} height='100%'>
+                            <Flex dir='row' height='100%'><Text fontSize='lg' fontWeight='bold'>{`Price: ${currentProduct.price}$`}</Text></Flex>
+                        </Flex>
+                        <Flex direction='column' flex={8} height='100%'>
+                            <Flex dir='row' justify='space-evenly' height='100%'>
+                                <Text fontSize='lg' fontWeight='bold'>{"QTY:"}</Text>
+                                <NumberInput
+                                    onChange={onQtyChange}
+                                    value={checkout[checkoutIndex].quantity}
+                                    min={0}
+                                >
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                            </Flex>
+                        </Flex>
+                        <Flex direction='column' flex={8} height='100%'>
+                            <Flex dir='row' justify='end' height='100%'><Text fontSize='lg' fontWeight='bold'>{`Total: ${currentProduct.price * checkout[checkoutIndex].quantity}$`}</Text></Flex>
                         </Flex>
                     </Flex>
-                    <Flex direction='column' flex={8}>
-                        <Flex dir='row'>{"Total: "}</Flex>
-                        <Flex dir='row'>{`${currentProduct.price * checkout[checkoutIndex].quantity}$`}</Flex>
-                    </Flex>
-                </Flex>
+                </>
+                }
             </Flex>
-            }
         </Flex>
     );
 }

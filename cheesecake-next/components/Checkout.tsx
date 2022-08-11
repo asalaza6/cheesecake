@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { LineItem } from '../util';
 
 interface CheckoutProps {
@@ -20,42 +20,67 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
     }, 0);
 
     return (
-        <Flex direction="column" width='100%' borderBottom='black'>
-            Summary
-            <Flex dir='row'>
+        <Flex direction="column" width='100%' padding='15px' borderRadius='20px'>
+            
+            <Text fontSize='2xl' fontWeight='bold'>
+                Summary
+            </Text>
+            <Flex dir='row' borderBottom='1px black solid' paddingBottom='10px'>
                 <Flex dir='column' flex={4}>
-                    Name
+                    <Text fontSize='lg' fontWeight='bold'>
+                        Name
+                    </Text>
                 </Flex>
-                <Flex dir='column' flex={2}>
-                    Price
+                <Flex dir='column' flex={2} justify='end'>
+                    <Text fontSize='lg' fontWeight='bold'>
+                        Price
+                    </Text>
                 </Flex>
-                <Flex dir='column' flex={2}>
-                    Quantity
+                <Flex dir='column' flex={2} justify='end'>
+                    <Text fontSize='lg' fontWeight='bold'>
+                        Quantity
+                    </Text>
                 </Flex>
-                <Flex dir='column' flex={2}>
-                    Total
+                <Flex dir='column' flex={2} justify='end'>
+                    <Text fontSize='lg' fontWeight='bold'>
+                        Total
+                    </Text>
                 </Flex>
             </Flex>
-            <br/>
-            {checkout.map((item) => {
+            {checkout.map((item, idx) => {
                 return (
-                    <Flex key={item.name} dir='row' borderBottom='black'>
+                    <Flex key={`${item.name}${item.metadata?.flavors}`} dir='row' paddingBottom='10px' borderBottom='1px black solid'>
                         <Flex dir='column' flex={4}>
-                            {item.name}
+                            <Text fontSize='lg' fontWeight='bold'>
+                                {`${item.name} - ${item.metadata?.flavors || item.metadata?.type}`}
+                            </Text>
                         </Flex>
-                        <Flex dir='column' flex={2}>
-                            {item.priceAmount}
+                        <Flex dir='column' flex={2} justify='end'>
+                            <Text fontSize='lg' fontWeight='bold'>
+                                {`${item.priceAmount}$`}
+                            </Text>
                         </Flex>
-                        <Flex dir='column' flex={2}>
-                            {item.quantity}
+                        <Flex dir='column' flex={2} justify='end'>
+                            <Text fontSize='lg' fontWeight='bold'>
+                                {item.quantity}
+                            </Text>
                         </Flex>
-                        <Flex dir='column' flex={2}>
-                            {item.priceAmount * item.quantity}
+                        <Flex dir='column' flex={2} justify='end'>
+                            <Text fontSize='lg' fontWeight='bold'>
+                                {`${item.priceAmount * item.quantity}$`}
+                            </Text>
                         </Flex>
                     </Flex>
                 );
             })}
-            <Flex dir='row'>{`Total: ${total}`}</Flex>
+            <Flex dir='row'>
+                <br></br>
+            </Flex>
+            <Flex dir='row' justify='end'>
+                <Text fontSize='lg' fontWeight='bold'>
+                    {`Total: ${total}$`}
+                </Text>
+            </Flex>
         </Flex>
     );
 }
