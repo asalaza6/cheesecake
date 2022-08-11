@@ -160,7 +160,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
     return (
         <Flex width='100%' direction="column" alignItems='center' dir="center" justify="center" padding='15px' borderRadius='20px'>
             
-            <Flex dir='row' width='100%'>
+            <Flex dir='row' width='100%' wrap='wrap'>
                 <Flex dir='column' flex={1}>
                     <Button {...getTypeButtonProps('small')}>Single Small</Button>
                 </Flex>
@@ -179,12 +179,13 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
             </Flex>
             {
                 specialProductType[productType] ? (
-                    <Flex dir='row' width='100%' justify='center'>
+                    <Flex dir='row' width='100%' justify='center' wrap='wrap'>
                         {(new Array(specialProductType[productType])).fill(0).map((item, idx) => {
                             return (
                                 <Flex key={`${productType}${idx}`} dir='column' flex={1} maxWidth='500px'>
                                     <Select 
                                         width='100%'
+                                        minWidth='100px'
                                         placeholder={`Cake ${idx + 1}`}
                                         onChange={(evt: any) => { onProductSelectSpecial(evt, idx); }}
                                     >
@@ -207,13 +208,14 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
             <Flex direction='column' width='100%' alignItems='center'>
                 {
                     specialProductType[productType] ? (
-                        <Flex dir='row' width='100%' padding='10px' justify='center'>
+                        <Flex dir='row' width='100%' padding='10px' justify='center' wrap='wrap'>
                             {specialProducts.map((item, idx) => {
                                 return (
                                     <Flex key={`item.name${idx}`} dir='column' flex={1} maxWidth='500px'>
                                         <Image 
                                             maxHeight='500px'
                                             width='100%'
+                                            minWidth='100px'
                                             fallbackSrc='/static/fallback.jpeg'
                                             alt={item?.description || 'choose a cheesecake'} 
                                             src={item?.images.length ? item.images[0] : null} 
@@ -240,12 +242,13 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                             <Flex dir='row' height='100%'><Text fontSize='lg' fontWeight='bold'>{`Price: ${currentProduct.price}$`}</Text></Flex>
                         </Flex>
                         <Flex direction='column' flex={8} height='100%'>
-                            <Flex dir='row' justify='space-evenly' height='100%'>
-                                <Text fontSize='lg' fontWeight='bold'>{"QTY:"}</Text>
+                            <Flex dir='row' justify='space-evenly' height='100%' wrap='wrap'>
+                                <Text fontSize='lg' fontWeight='bold'>{"Qty:"}</Text>
                                 <NumberInput
                                     onChange={onQtyChange}
                                     value={checkout[checkoutIndex].quantity}
                                     min={0}
+                                    minWidth='100px'
                                 >
                                     <NumberInputField />
                                     <NumberInputStepper>
