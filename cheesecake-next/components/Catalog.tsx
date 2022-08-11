@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Flex, Select, Image, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper } from "@chakra-ui/react";
+import { Flex, Select, Image, NumberInput, NumberInputField, NumberInputStepper, NumberDecrementStepper, NumberIncrementStepper, Button, ComponentWithAs, ButtonProps } from "@chakra-ui/react";
 import { isArray, LineItem } from '../util';
 
 interface CatalogProps {
@@ -22,7 +22,19 @@ interface ProductInfo {
     // url: null
     unit_label: string,
     price: number,
+    // added by BE
+    qty: number,
 }
+
+const ProductType = {
+    'small': 'small',
+    'trio': 'small',
+    'teninch': 'teninch',
+    'variety': 'small',
+    'teninchdouble': 'teninch',
+}
+
+type ProductTypeType = keyof typeof ProductType;
 
 export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
     const {
@@ -31,8 +43,11 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
     } = props;
 
     const [products, setProducts] = useState<ProductInfo[]>([]);
-    const [currentProduct, setCurrentProduct] = useState<ProductInfo & { qty: number }>();
+    const [currentProduct, setCurrentProduct] = useState<ProductInfo>();
     const [checkoutIndex, setCheckoutIndex] = useState(-1);
+    const [productType, setProductType] = useState<ProductTypeType>();
+    const [productTypeList, setProductTypeList] = useState<ProductInfo[]>([]);
+    const [specialProducts, setSpecialProducts] = useState<(ProductInfo | null)[]>([]);
 
     const loadProductList = async () => {
         const response = await fetch(`/api/products`,{
@@ -74,29 +89,136 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         }
     }
 
+    const onProductSelectSpecial = (evt, idx: number) => {
+        const productID = evt.target.value;
+        const prod = products.find((item) => item.id === productID);
+        if (prod) specialProducts[idx] = prod;
+        const filled = specialProducts.every((item) => item);
+        if (filled) {
+            const flavors = specialProducts.map((item) => item.name).sort().join(' - ');
+            const specialProd = products.find((item) => item.metadata?.type === productType);
+            let idx = checkout.findIndex((item) => item.price === specialProd.default_price && item.metadata?.flavors === flavors);
+            if (idx === -1) {
+                const length = checkout.push({
+                    price: specialProd.default_price,
+                    name: specialProd.name,
+                    quantity: 0,
+                    priceAmount: specialProd.price,
+                    metadata: {
+                        flavors,
+                    },
+                });
+                setCheckout([...checkout]);
+                idx = length - 1;
+            }
+            setCheckoutIndex(idx);
+            const qty = checkout[idx].quantity;
+            setCurrentProduct({
+                ...specialProd,
+                qty,
+            })
+        }
+    }
+
+    const changeProductType = (type: ProductTypeType) => {
+        if (type !== productType) {
+            setProductType(type);
+            const selectedProducts = products.filter((p: ProductInfo) => {
+                return p.metadata?.type === ProductType[type];
+            });
+            setProductTypeList(selectedProducts);
+            setSpecialProducts(type === 'trio' ? (new Array(3)).fill(null) : type === 'variety' ? (new Array(5)).fill(null) : undefined);
+        }
+    }
+
     const onQtyChange = (valueAsString: string, valueAsNumber: number) => {
         checkout[checkoutIndex].quantity = valueAsNumber;
         setCheckout([...checkout]);
     }
+
+    const getTypeButtonProps: (type: ProductTypeType) => ButtonProps = (type: ProductTypeType) => {
+        const selected = productType === type;
+        const props: ButtonProps = {
+            onClick: () => {
+                changeProductType(type);
+            },
+            style: {
+                border: selected ? '1px black solid' : undefined,
+            },
+        };
+        return props;
+    };
+    const SelectOptions = productTypeList.map((item) => <option value={item.id}>{item.name}</option>);
     return (
         <Flex maxWidth='100%' direction="column" dir="center" justify="center">
-            <Select 
-                placeholder='Select a Product'
-                onChange={onProductSelect}
-            >
-                {products.map((item) => <option value={item.id}>{item.name}</option>)}
-            </Select>
+            <Flex wrap='wrap'>
+                <Flex dir='row'>
+                    <Flex dir='column'>
+                        <Button {...getTypeButtonProps('small')}>Single Small</Button>
+                    </Flex>
+                    <Flex dir='column'>
+                        <Button {...getTypeButtonProps('teninch')}>Ten Inch</Button>
+                    </Flex>
+                </Flex>
+                <Flex dir='row'>
+                    <Flex dir='column'>
+                        <Button {...getTypeButtonProps('teninchdouble')}>Ten Inch Half/Half</Button>
+                    </Flex>
+                    <Flex dir='column'>
+                        <Button {...getTypeButtonProps('trio')}>Trio</Button>
+                    </Flex>
+                    <Flex dir='column'>
+                        <Button {...getTypeButtonProps('variety')}>Variety</Button>
+                    </Flex>
+                </Flex>
+            </Flex>
+            {
+                productType === 'trio' || productType === 'variety' ? (
+                    <Flex dir='row'>
+                        {(new Array(productType === 'trio' ? 3 : 5)).fill(0).map((item, idx) => {
+                            return (
+                                <Flex dir='column' flex={1}>
+                                    <Select 
+                                        placeholder={`Cake ${idx + 1}`}
+                                        onChange={(evt: any) => { onProductSelectSpecial(evt, idx); }}
+                                    >
+                                        {SelectOptions}
+                                    </Select>
+                                </Flex>
+                            );
+                        })}
+                    </Flex>
+                ) :
+                <Select 
+                    placeholder='Select a Product'
+                    onChange={onProductSelect}
+                >
+                    {SelectOptions}
+                </Select>
+            }
             {currentProduct && 
             <Flex direction='column'>
                 <Flex dir='row'>{currentProduct.name}</Flex>
-                <Image 
-                    alt={currentProduct.description} 
-                    src={currentProduct.images.length ? currentProduct.images[0] : null} 
-                    fontSize={undefined} 
-                    lineHeight={undefined} 
-                    letterSpacing={undefined} 
-                    wordBreak={'normal'} 
-                    as={undefined} />
+                {
+                    productType === 'trio' || productType === 'variety' ? (
+                        <Flex dir='row'>
+                            {specialProducts.map((item) => {
+                                return (
+                                    <Flex dir='column' flex={1}>
+                                        <Image 
+                                            alt={item.description} 
+                                            src={item.images.length ? item.images[0] : null} 
+                                        />
+                                    </Flex>
+                                );
+                            })}
+                        </Flex>
+                    ) :
+                    <Image 
+                        alt={currentProduct.description} 
+                        src={currentProduct.images.length ? currentProduct.images[0] : null} 
+                    />
+                }
                 <Flex dir='row'>{currentProduct.description}</Flex>
                 <Flex dir='row'>
                     <Flex direction='column' flex={8}>

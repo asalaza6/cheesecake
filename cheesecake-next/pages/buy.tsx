@@ -26,6 +26,7 @@ const App: React.FC<any> = (props: any) => {
         method: "POST",
         body: JSON.stringify({
           line_items: checkoutProducts,
+          metadata: { checkout: products },
         })
     });
     const parseRes = await response.json();
@@ -36,13 +37,9 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy (Coming Soon)
         </Heading>
-        <Flex dir='row'>
-          <Flex dir='column' flex={2}>
+        <Flex dir='column'>
             <Catalog checkout={products} setCheckout={setProducts} />
-          </Flex>
-          <Flex dir='column' flex={1}>
             <Checkout checkout={products} />
-          </Flex>
         </Flex>
         <Button onClick={checkout}>Checkout</Button>
     </>

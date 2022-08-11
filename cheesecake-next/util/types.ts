@@ -3,4 +3,5 @@ export interface LineItem {
     quantity: number; // qty of cheesecake
     name: string; // only ui purposes
     priceAmount: number; // only ui purposes
+    metadata?: any; // only ui purposes & email
 }
