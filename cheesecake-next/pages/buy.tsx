@@ -17,16 +17,21 @@ const App: React.FC<any> = (props: any) => {
   const [products, setProducts] = useState<LineItem[]>([]);
 
   const checkout = async () => {
-    const checkoutProducts = products.filter(item => item.quantity).map(item => ({ price: item.price, quantity: item.quantity }));
+    const checkoutProducts = products.filter(item => item.quantity);
     if (!isArray(checkoutProducts)) {
       alert('Cart is empty!');
       return;
     }
+    const line_items = checkoutProducts.map(item => ({ price: item.price, quantity: item.quantity }));
+    const metadata = checkoutProducts.reduce((reducer, reducerItem) => {
+      reducer[`${reducerItem.name}-${reducerItem.metadata?.flavors || reducerItem.metadata?.type}`] = JSON.stringify(reducerItem);
+      return reducer;
+    }, {});
     const response = await fetch(`/api/checkout`,{
         method: "POST",
         body: JSON.stringify({
-          line_items: checkoutProducts,
-          metadata: { 'checkout': JSON.stringify(products) },
+          line_items,
+          metadata,
         })
     });
     const parseRes = await response.json();
@@ -37,9 +42,13 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy (Coming Soon)
         </Heading>
-        <Flex dir='column'>
+        <Flex direction='column'>
+          <Flex dir='row'>
             <Catalog checkout={products} setCheckout={setProducts} />
+          </Flex>
+          <Flex dir='row'>
             <Checkout checkout={products} />
+          </Flex>
         </Flex>
         <Button onClick={checkout}>Checkout</Button>
     </>

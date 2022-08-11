@@ -95,7 +95,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         if (prod) specialProducts[idx] = prod;
         const filled = specialProducts.every((item) => item);
         if (filled) {
-            const flavors = specialProducts.map((item) => item.name).sort().join(' - ');
+            const flavors = specialProducts.map((item) => (item.name).slice(0, 5)).sort().join(' - ');
             const specialProd = products.find((item) => item.metadata?.type === productType);
             let idx = checkout.findIndex((item) => item.price === specialProd.default_price && item.metadata?.flavors === flavors);
             if (idx === -1) {
@@ -178,7 +178,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     <Flex dir='row'>
                         {(new Array(productType === 'trio' ? 3 : 5)).fill(0).map((item, idx) => {
                             return (
-                                <Flex key={`trio${idx}`} dir='column' flex={1}>
+                                <Flex key={`${productType}${idx}`} dir='column' flex={1}>
                                     <Select 
                                         placeholder={`Cake ${idx + 1}`}
                                         onChange={(evt: any) => { onProductSelectSpecial(evt, idx); }}
@@ -203,13 +203,15 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                 {
                     productType === 'trio' || productType === 'variety' ? (
                         <Flex dir='row'>
-                            {specialProducts.map((item) => {
+                            {specialProducts.map((item, idx) => {
                                 return (
-                                    <Flex key={item.name} dir='column' flex={1}>
-                                        <Image 
-                                            alt={item.description} 
-                                            src={item.images.length ? item.images[0] : null} 
-                                        />
+                                    <Flex key={`item.name${idx}`} dir='column' flex={1}>
+                                        <div>
+                                            <Image 
+                                                alt={item.description} 
+                                                src={item.images.length ? item.images[0] : null} 
+                                            />
+                                        </div>
                                     </Flex>
                                 );
                             })}
