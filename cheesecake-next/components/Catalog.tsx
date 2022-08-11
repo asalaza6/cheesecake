@@ -148,7 +148,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         };
         return props;
     };
-    const SelectOptions = productTypeList.map((item) => <option value={item.id}>{item.name}</option>);
+    const SelectOptions = productTypeList.map((item) => <option key={item.id} value={item.id}>{item.name}</option>);
     return (
         <Flex maxWidth='100%' direction="column" dir="center" justify="center">
             <Flex wrap='wrap'>
@@ -177,7 +177,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     <Flex dir='row'>
                         {(new Array(productType === 'trio' ? 3 : 5)).fill(0).map((item, idx) => {
                             return (
-                                <Flex dir='column' flex={1}>
+                                <Flex key={`trio${idx}`} dir='column' flex={1}>
                                     <Select 
                                         placeholder={`Cake ${idx + 1}`}
                                         onChange={(evt: any) => { onProductSelectSpecial(evt, idx); }}
@@ -204,7 +204,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                         <Flex dir='row'>
                             {specialProducts.map((item) => {
                                 return (
-                                    <Flex dir='column' flex={1}>
+                                    <Flex key={item.name} dir='column' flex={1}>
                                         <Image 
                                             alt={item.description} 
                                             src={item.images.length ? item.images[0] : null} 
