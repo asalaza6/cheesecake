@@ -3,8 +3,14 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 export default async function handle(req, res) {
     try{
-        const { data: productList = [] } = await stripe.products.list({});
-        const { data: priceList = [] } = await stripe.prices.list({});
+        const { data: productList = [] } = await stripe.products.list({
+            limit: 100,
+            active: true,
+        });
+        const { data: priceList = [] } = await stripe.prices.list({
+            limit: 100,
+            active: true,
+        });
 
         const idToPrice = {
 

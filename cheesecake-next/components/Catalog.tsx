@@ -133,6 +133,8 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                 ...specialProd,
                 qty,
             })
+        } else if (currentProduct) {
+            setCurrentProduct(undefined);
         }
     }
 
