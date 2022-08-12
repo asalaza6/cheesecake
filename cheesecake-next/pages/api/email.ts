@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { LineItem, ProductTypeName } from '../../util';
 
 const transportSendMailAsync = (transport: any, mailOptions): Promise<{ success: boolean, data: any }> => {
     return new Promise((resolve, reject) => {
@@ -36,12 +37,39 @@ export default async function handle(req, res) {
 
         const businessEmail = 'asalazar9949@gmail.com';
 
+        const orderedProducts = (products as LineItem[]).filter(item => item.quantity);
+
+        const thanksMessage = 'Thank you for ordering from The Cheesecake Connect!';
+
+        const byeMessage = 'We will fulfill your order very soon. Please contact us for any questions!'
+
+        const summary: string[] = orderedProducts.map((item) => {
+            return (
+                `${item.quantity} ` +
+                `${item.name} - ${item.metadata?.flavors || ProductTypeName[item.metadata?.type]} (${item.priceAmount}$)` +
+                ` = ${item.priceAmount*item.quantity}$`
+            );
+        });
+        const totalAmount = orderedProducts.reduce((reducer, reducerItem) => {
+            reducer += reducerItem.priceAmount * reducerItem.quantity;
+            return reducer;
+        }, 0);
+
+        const total = `Total ${totalAmount}$`;
+
+        const text = thanksMessage+'\n' + summary.join('\n') + '\n' + total + '\n' + byeMessage;
+        const html = `<p>${thanksMessage}</p>` + 
+            `<ul>${summary.map((item)=>`<li>${item}</li>`).join()}</ul>` +
+            `<p>${total}</p>` + 
+            '<br/>' +
+            `<p>${byeMessage}</p>`;
+
         const mailOptions = {
             from: `The Cheesecake Connect <${businessEmail}>`,
             to: `${businessEmail}, ${email}`,
             subject: 'Cheesecake test',
-            text: JSON.stringify(products),
-            html: JSON.stringify(products),
+            text,
+            html,
         };
         const emailRes = await transportSendMailAsync(transport, mailOptions);
         res.json(emailRes);
