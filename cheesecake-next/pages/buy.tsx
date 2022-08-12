@@ -88,12 +88,12 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy
         </Heading>
-        <Flex direction='column' width='80%'>
+        <Flex direction='column' width='100%' padding='25px'>
           <Flex dir='row'>
             <Catalog checkout={products} setCheckout={setCheckout} />
           </Flex>
           <Flex dir='row'>
-            <Checkout checkout={products} />
+            <Checkout checkout={products} setCheckout={setCheckout} />
           </Flex>
         </Flex>
         

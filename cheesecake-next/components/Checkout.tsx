@@ -1,6 +1,7 @@
 import React from 'react';
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, IconButton, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
 import { LineItem, useScreenSize } from '../util';
+import { AiOutlineDelete } from 'react-icons/ai';
 
 interface CheckoutProps {
     checkout: LineItem[];
@@ -26,6 +27,14 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
         return reducer;
     }, 0);
 
+    const onQtyChange = (quantity: number, idx: number) => {
+        checkout[idx].quantity = quantity;
+    }
+
+    const deleteItem = (idx: number) => {
+        checkout.splice(idx, 1);
+    }
+
     return (
         <Flex direction="column" width='100%' padding='15px' borderRadius='20px'>
             
@@ -48,7 +57,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
                         Qty
                     </Text>
                 </Flex>
-                <Flex dir='column' flex={2} justify='end'>
+                <Flex dir='column' flex={3} justify='end'>
                     <Text fontSize={fontSize['small']} fontWeight='bold'>
                         Total
                     </Text>
@@ -68,14 +77,27 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
                             </Text>
                         </Flex>
                         <Flex dir='column' flex={2} justify='end'>
-                            <Text fontSize={fontSize['small']} fontWeight='bold'>
-                                {item.quantity}
-                            </Text>
+                            <NumberInput
+                                    onChange={(valueAsString: string, valueAsNumber: number) => onQtyChange(valueAsNumber, idx)}
+                                    value={item.quantity}
+                                    min={0}
+                                    max={99}
+                                    minWidth='75px'
+                                >
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
                         </Flex>
                         <Flex dir='column' flex={2} justify='end'>
                             <Text fontSize={fontSize['small']} fontWeight='bold'>
                                 {`${item.priceAmount * item.quantity}$`}
                             </Text>
+                        </Flex>
+                        <Flex dir='column' flex={1} justify='end'>
+                            <IconButton aria-label='Delete' onClick={() => deleteItem(idx)} size='lg' colorScheme='red' icon={<AiOutlineDelete />} />
                         </Flex>
                     </Flex>
                 );
