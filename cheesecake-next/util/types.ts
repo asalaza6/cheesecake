@@ -16,3 +16,11 @@ export const ProductType = {
 }
 
 export type ProductTypeType = keyof typeof ProductType;
+
+export const ProductTypeName: Record<ProductTypeType, string> = {
+    small: 'Small',
+    trio: 'Trio',
+    teninch: '10 inch',
+    variety: 'Variety',
+    teninchdouble: '10 inch half/half',
+}

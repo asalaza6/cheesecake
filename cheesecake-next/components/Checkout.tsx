@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, IconButton, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Text } from "@chakra-ui/react";
-import { LineItem, useScreenSize } from '../util';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { LineItem, ProductTypeName, useScreenSize } from '../util';
+import { AiOutlineDelete, AiOutlineSearch } from 'react-icons/ai';
 
 interface CheckoutProps {
     checkout: LineItem[];
@@ -20,8 +20,6 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
         small: screenSize === "s" ? 'medium' : 'lg',
     }
 
-    checkout = checkout.filter((item) => item.quantity);
-
     const total = checkout.reduce((reducer, reducerItem) => {
         reducer += reducerItem.priceAmount * reducerItem.quantity;
         return reducer;
@@ -33,7 +31,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
     }
 
     const deleteItem = (idx: number) => {
-        checkout.splice(idx, 1);
+        checkout[idx].quantity = 0;
         setCheckout([...checkout]);
     }
 
@@ -49,57 +47,62 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
                         Name
                     </Text>
                 </Flex>
-                <Flex dir='column' flex={2} justify='end'>
+                <Flex dir='column' flex={2} justify='center'>
                     <Text fontSize={fontSize['small']} fontWeight='bold'>
                         Price
                     </Text>
                 </Flex>
-                <Flex dir='column' flex={2} justify='end'>
+                <Flex dir='column' flex={3} justify='center'>
                     <Text fontSize={fontSize['small']} fontWeight='bold'>
                         Qty
                     </Text>
                 </Flex>
-                <Flex dir='column' flex={3} justify='end'>
+                <Flex dir='column' flex={2} justify='center'>
                     <Text fontSize={fontSize['small']} fontWeight='bold'>
                         Total
                     </Text>
                 </Flex>
+                <Flex flex={1} minW='50px' />
             </Flex>
             {checkout.map((item, idx) => {
+                if (!item.quantity) return null;
                 return (
                     <Flex key={`${item.name}${item.metadata?.flavors}`} dir='row' paddingBottom='10px' borderBottom='1px black solid'>
-                        <Flex dir='column' flex={4}>
-                            <Text fontSize={fontSize['small']} fontWeight='bold'>
-                                {`${item.name} - ${item.metadata?.flavors || item.metadata?.type}`}
+                        <Flex dir='column' flex={4} justify='center' align='center'>
+                            <Text fontSize={fontSize['small']} fontWeight='bold' align='center'>
+                                {`${item.name} - ${item.metadata?.flavors || ProductTypeName[item.metadata?.type]}`}
                             </Text>
                         </Flex>
-                        <Flex dir='column' flex={2} justify='end'>
+                        <Flex dir='column' flex={2} justify='center' align='center'>
                             <Text fontSize={fontSize['small']} fontWeight='bold'>
                                 {`${item.priceAmount}$`}
                             </Text>
                         </Flex>
-                        <Flex dir='column' flex={2} justify='end'>
+                        <Flex dir='column' flex={3} justify='center' align='center'>
                             <NumberInput
                                     onChange={(valueAsString: string, valueAsNumber: number) => onQtyChange(valueAsNumber, idx)}
                                     value={item.quantity}
                                     min={0}
                                     max={99}
+                                    height='100%'
                                     minWidth='75px'
                                 >
-                                    <NumberInputField />
+                                    <NumberInputField height='100%' />
                                     <NumberInputStepper>
                                         <NumberIncrementStepper />
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
                         </Flex>
-                        <Flex dir='column' flex={3} justify='end'>
+                        <Flex dir='column' flex={2} justify='center' align='center'>
                             <Flex direction='row' wrap='wrap'>
                                 <Text fontSize={fontSize['small']} fontWeight='bold'>
                                     {`${item.priceAmount * item.quantity}$`}
                                 </Text>
-                                <IconButton aria-label='Delete' onClick={() => deleteItem(idx)} size='lg' colorScheme='red' icon={<AiOutlineDelete />} />
-                            </Flex>
+                                 </Flex>
+                        </Flex>
+                        <Flex dir='column' flex={1} minWidth='50px' justify='end' align='center'>
+                            <IconButton aria-label='Delete' onClick={() => deleteItem(idx)} size='lg' colorScheme='red' icon={<AiOutlineDelete />} />
                         </Flex>
                     </Flex>
                 );

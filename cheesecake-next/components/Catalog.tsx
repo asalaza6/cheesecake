@@ -73,7 +73,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
         } else if (!productType) {
             changeProductType('small');
         }
-    }, [products, changeProductType, productType]);
+    }, [products, productType]);
 
     const onProductSelect = (evt) => {
         const productID = evt.target.value;
@@ -240,11 +240,11 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                 {currentProduct && <>
                     <Flex dir='row'><Text fontSize='lg' fontWeight='bold'>{currentProduct.description}</Text></Flex>
                     <Flex dir='row' width='100%'>
-                        <Flex direction='column' flex={8} height='100%'>
-                            <Flex dir='row' height='100%'><Text fontSize='lg' fontWeight='bold'>{`Price: ${currentProduct.price}$`}</Text></Flex>
+                        <Flex direction='column' flex={8} height='100%' justify='center'>
+                            <Text fontSize='lg' fontWeight='bold'>{`Price: ${currentProduct.price}$`}</Text>
                         </Flex>
-                        <Flex direction='column' flex={8} height='100%'>
-                            <Flex dir='row' justify='space-evenly' height='100%' wrap='wrap'>
+                        <Flex direction='column' flex={8} height='100%' justify='center'>
+                            <Flex dir='row' justify='space-evenly' wrap='wrap' align='center'>
                                 <Text fontSize='lg' fontWeight='bold'>{"Qty:"}</Text>
                                 <NumberInput
                                     onChange={onQtyChange}
@@ -261,7 +261,9 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                             </Flex>
                         </Flex>
                         <Flex direction='column' flex={8} height='100%'>
-                            <Flex dir='row' justify='end' height='100%'><Text fontSize='lg' fontWeight='bold'>{`Total: ${currentProduct.price * checkout[checkoutIndex].quantity}$`}</Text></Flex>
+                            <Flex dir='row' justify='end' align='center' height='100%'>
+                                <Text fontSize='lg' fontWeight='bold'>{`Total: ${currentProduct.price * checkout[checkoutIndex].quantity}$`}</Text>
+                            </Flex>
                         </Flex>
                     </Flex>
                 </>

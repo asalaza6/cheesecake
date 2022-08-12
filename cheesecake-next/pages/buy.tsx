@@ -89,7 +89,7 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy
         </Heading>
-        <Flex direction='column' width={screenSize === 's' ? '100%' : '80%'} padding='25px'>
+        <Flex direction='column' width={screenSize === 'l' ? '80%' : '100%'} padding='10px'>
           <Flex dir='row'>
             <Catalog checkout={products} setCheckout={setCheckout} />
           </Flex>
