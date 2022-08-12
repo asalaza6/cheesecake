@@ -10,7 +10,7 @@ interface CheckoutProps {
 export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
     let {
         checkout,
-        // setCheckout, // readonly for now
+        setCheckout, // readonly for now
     } = props;
     const [screenSize] = useScreenSize();
     
@@ -29,10 +29,12 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
 
     const onQtyChange = (quantity: number, idx: number) => {
         checkout[idx].quantity = quantity;
+        setCheckout([...checkout]);
     }
 
     const deleteItem = (idx: number) => {
         checkout.splice(idx, 1);
+        setCheckout([...checkout]);
     }
 
     return (
@@ -91,13 +93,13 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
                                     </NumberInputStepper>
                                 </NumberInput>
                         </Flex>
-                        <Flex dir='column' flex={2} justify='end'>
-                            <Text fontSize={fontSize['small']} fontWeight='bold'>
-                                {`${item.priceAmount * item.quantity}$`}
-                            </Text>
-                        </Flex>
-                        <Flex dir='column' flex={1} justify='end'>
-                            <IconButton aria-label='Delete' onClick={() => deleteItem(idx)} size='lg' colorScheme='red' icon={<AiOutlineDelete />} />
+                        <Flex dir='column' flex={3} justify='end'>
+                            <Flex direction='row' wrap='wrap'>
+                                <Text fontSize={fontSize['small']} fontWeight='bold'>
+                                    {`${item.priceAmount * item.quantity}$`}
+                                </Text>
+                                <IconButton aria-label='Delete' onClick={() => deleteItem(idx)} size='lg' colorScheme='red' icon={<AiOutlineDelete />} />
+                            </Flex>
                         </Flex>
                     </Flex>
                 );

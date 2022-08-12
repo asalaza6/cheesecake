@@ -2,12 +2,12 @@ import { AlertDialog, Button, Flex, Heading } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 
 //redux
-import {connect} from 'react-redux';
-import {LOGOUT, AUTHORIZE} from '../actions/userAction';
+import { connect } from 'react-redux';
+import { LOGOUT, AUTHORIZE } from '../actions/userAction';
 import { Checkout } from '../components';
 import Catalog from '../components/Catalog';
 import { wrapper } from '../store';
-import { LineItem, isArray } from '../util';
+import { LineItem, isArray, useScreenSize } from '../util';
 
 export const getServerSideProps = wrapper.getServerSideProps(store => ({req, res, ...etc}): any => {
   return {};
@@ -15,6 +15,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => ({req, res
 
 const App: React.FC<any> = (props: any) => {
   const [products, setProducts] = useState<LineItem[]>([]);
+  const [screenSize] = useScreenSize();
 
   const checkout = async () => {
     const checkoutProducts = products.filter(item => item.quantity);
@@ -88,7 +89,7 @@ const App: React.FC<any> = (props: any) => {
         <Heading>
             Buy
         </Heading>
-        <Flex direction='column' width='100%' padding='25px'>
+        <Flex direction='column' width={screenSize === 's' ? '100%' : '80%'} padding='25px'>
           <Flex dir='row'>
             <Catalog checkout={products} setCheckout={setCheckout} />
           </Flex>
