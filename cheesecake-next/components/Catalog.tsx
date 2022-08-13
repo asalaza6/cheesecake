@@ -139,6 +139,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
     }
 
     const onQtyChange = (valueAsString: string, valueAsNumber: number) => {
+        if (valueAsNumber === NaN) valueAsNumber = 0;
         checkout[checkoutIndex].quantity = valueAsNumber;
         setCheckout([...checkout]);
     }
