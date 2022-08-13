@@ -26,7 +26,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
     }, 0);
 
     const onQtyChange = (quantity: number, idx: number) => {
-        if (quantity === NaN) quantity = 0;
+        if (isNaN(quantity)) quantity = 0;
         checkout[idx].quantity = quantity;
         setCheckout([...checkout]);
     }
