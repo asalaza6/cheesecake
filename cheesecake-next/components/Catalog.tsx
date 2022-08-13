@@ -252,6 +252,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                                     value={checkout[checkoutIndex].quantity}
                                     min={0}
                                     minWidth='100px'
+                                    max={99}
                                 >
                                     <NumberInputField />
                                     <NumberInputStepper>
