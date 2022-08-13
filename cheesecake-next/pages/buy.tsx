@@ -39,12 +39,12 @@ const App: React.FC<any> = (props: any) => {
     window.location = parseRes;
   }
 
-  const sendEmail = async (email?: string) => {
+  const sendEmail = async (session_id: string) => {
     const response = await fetch(`/api/email`,{
         method: "POST",
         body: JSON.stringify({
           products,
-          email
+          session_id
         })
     });
     const parseRes = await response.json();

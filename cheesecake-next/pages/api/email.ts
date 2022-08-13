@@ -23,7 +23,6 @@ const transportSendMailAsync = (transport: any, mailOptions): Promise<{ success:
 export default async function handle(req, res) {
     try{
         const { 
-            // email,
             products,
             session_id,
         } = JSON.parse(req.body);
@@ -32,9 +31,11 @@ export default async function handle(req, res) {
         const session = await stripe.checkout.sessions.retrieve(session_id);
 
         const {
-            customer_email: email,
+            customer_details: {
+                email = undefined,
+            },
         } = session;
-
+        
         const transport = nodemailer.createTransport({
             host: 'smtp.mailtrap.io',
             port: 2525,
@@ -88,6 +89,6 @@ export default async function handle(req, res) {
         // return res.json(true);
     } catch(err: any){
         console.log(err.message);
-        res.status(500).send("Server Error");
+        res.status(500).send(`Server Error ${err.message}`);
     }
 }
