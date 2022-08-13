@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 import { LineItem, ProductTypeName } from '../../util';
 
 const transportSendMailAsync = (transport: any, mailOptions): Promise<{ success: boolean, data: any }> => {
@@ -22,9 +23,17 @@ const transportSendMailAsync = (transport: any, mailOptions): Promise<{ success:
 export default async function handle(req, res) {
     try{
         const { 
-            email,
+            // email,
             products,
+            session_id,
         } = JSON.parse(req.body);
+
+        // get email from checkout session
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+        const {
+            customer_email: email,
+        } = session;
 
         const transport = nodemailer.createTransport({
             host: 'smtp.mailtrap.io',

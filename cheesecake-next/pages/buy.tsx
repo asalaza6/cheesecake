@@ -74,9 +74,9 @@ const App: React.FC<any> = (props: any) => {
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const success = urlParams.get('success');
-      const email = urlParams.get('email');
+      const session_id = urlParams.get('session_id');
       if (success) {
-        sendEmail(email);
+        sendEmail(session_id);
         alert('Transaction Successful!');
         setCheckout(undefined);
         window.history.replaceState(null, null, window.location.pathname);
