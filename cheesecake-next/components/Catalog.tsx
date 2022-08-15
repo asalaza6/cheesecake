@@ -214,14 +214,16 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                         <Flex dir='row' width='100%' padding='10px' justify='center' wrap='wrap'>
                             {specialProducts.map((item, idx) => {
                                 return (
-                                    <Flex key={`item.name${idx}`} dir='column' flex={1} maxWidth='500px'>
+                                    <Flex key={`${item.name}${idx}`} dir='column' flex={1} maxWidth='500px'>
                                         <Image 
                                             maxHeight='500px'
+                                            maxWidth='500px'
                                             width='100%'
+                                            objectFit='cover'
                                             minWidth='100px'
                                             fallbackSrc='/static/fallback.jpeg'
                                             alt={item?.description || 'choose a cheesecake'} 
-                                            src={item?.images.length ? item.images[0] : null} 
+                                            src={item?.images?.length ? item.images[0] : null} 
                                         />
                                     </Flex>
                                 );
@@ -231,11 +233,12 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                     <Image 
                         maxHeight='500px'
                         maxWidth='500px'
+                        objectFit='cover'
                         width='100%'
                         padding='10px'
                         fallbackSrc='/static/fallback.jpeg'
                         alt={currentProduct?.description} 
-                        src={currentProduct?.images.length ? currentProduct.images[0] : null} 
+                        src={currentProduct?.images?.length ? currentProduct.images[0] : null} 
                     />
                 }
                 {currentProduct && <>
