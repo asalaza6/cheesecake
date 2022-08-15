@@ -214,7 +214,7 @@ export const Catalog: React.FC<CatalogProps> = (props: CatalogProps) => {
                         <Flex dir='row' width='100%' padding='10px' justify='center' wrap='wrap'>
                             {specialProducts.map((item, idx) => {
                                 return (
-                                    <Flex key={`${item.name}${idx}`} dir='column' flex={1} maxWidth='500px'>
+                                    <Flex key={`${item?.name}${idx}`} dir='column' flex={1} maxWidth='500px'>
                                         <Image 
                                             maxHeight='500px'
                                             maxWidth='500px'
