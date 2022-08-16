@@ -28,6 +28,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
     const onQtyChange = (quantity: number, idx: number) => {
         if (isNaN(quantity)) quantity = 0;
         checkout[idx].quantity = quantity;
+        console.log(checkout);
         setCheckout([...checkout]);
     }
 
@@ -68,7 +69,7 @@ export const Checkout: React.FC<CheckoutProps> = (props: CheckoutProps) => {
             {checkout.map((item, idx) => {
                 if (!item.quantity) return null;
                 return (
-                    <Flex key={`${item.name}${item.metadata?.flavors}`} dir='row' paddingBottom='10px' borderBottom='1px black solid'>
+                    <Flex key={`${item.name}${item.metadata?.flavors || item.metadata?.type}`} dir='row' paddingBottom='10px' borderBottom='1px black solid'>
                         <Flex dir='column' flex={4} justify='center' align='center'>
                             <Text fontSize={fontSize['small']} fontWeight='bold' align='center'>
                                 {`${item.name} - ${item.metadata?.flavors || ProductTypeName[item.metadata?.type]}`}
