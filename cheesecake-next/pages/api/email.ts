@@ -69,7 +69,7 @@ export default async function handle(req, res) {
 
         const text = thanksMessage+'\n' + summary.join('\n') + '\n' + total + '\n' + byeMessage;
         const html = `<p>${thanksMessage}</p>` + 
-            `<ul>${summary.map((item)=>`<li>${item}</li>`).join()}</ul>` +
+            `<ul>${summary.map((item)=>`<li>${item}</li>`).join('')}</ul>` +
             `<p>${total}</p>` + 
             '<br/>' +
             `<p>${byeMessage}</p>`;
